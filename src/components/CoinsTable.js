@@ -23,15 +23,7 @@ const CoinsTable = () => {
 
   useEffect(() => {
     setPage(1);
-
-    return () => {
-      setPage();
-    }
   }, [search])
-
-  useEffect(() => {
-    console.log(`page is ${page} `);
-  }, [page])
 
   const darkTheme = createTheme(({
     palette: {
@@ -43,15 +35,12 @@ const CoinsTable = () => {
   }));
 
   const handleSearch = () => {
-    if (search === undefined || search === "") {
-      return coins;
-    }
-    const arr = coins.filter(
+    if (search == null) return coins;
+    return coins.filter(
       (coin) =>
         coin.name.toLowerCase().includes(search) ||
         coin.symbol.toLowerCase().includes(search)
     );
-    return arr;
   };
 
   const useStyles = makeStyles()((theme) => ({
@@ -120,74 +109,73 @@ const CoinsTable = () => {
                 </TableHead>
 
                 <TableBody>
-                  {(handleSearch().slice((page - 1) * 10, (page - 1) * 10 + 10))
-                    .map((row) => {
-                      const profit = row.price_change_percentage_24h > 0;
+                  {handleSearch().slice((page - 1) * 10, (page - 1) * 10 + 10).map((row) => {
+                    const profit = row.price_change_percentage_24h > 0;
 
-                      return (
-                        <TableRow
-                          onClick={() => navigate(`/coins/${row.id}`)}
-                          className={classes.row}
-                          key={row.name}>
+                    return (
+                      <TableRow
+                        onClick={() => navigate(`/coins/${row.id}`)}
+                        className={classes.row}
+                        key={row.name}>
 
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            style={{
-                              display: "flex",
-                              gap: 15,
-                            }}
-                          >
-                            <img
-                              src={row?.image}
-                              alt={row.name}
-                              height="50"
-                              style={{ marginBottom: 10 }}
-                            />
-                            <div style={{ display: "flex", flexDirection: "column" }}>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          style={{
+                            display: "flex",
+                            gap: 15,
+                          }}
+                        >
+                          <img
+                            src={row?.image}
+                            alt={row.name}
+                            height="50"
+                            style={{ marginBottom: 10 }}
+                          />
+                          <div style={{ display: "flex", flexDirection: "column" }}>
 
-                              <span
-                                style={{
-                                  textTransform: "uppercase",
-                                  fontSize: 22,
-                                }}
+                            <span
+                              style={{
+                                textTransform: "uppercase",
+                                fontSize: 22,
+                              }}
 
-                              >
-                                {row.symbol}
-                              </span>
+                            >
+                              {row.symbol}
+                            </span>
 
-                              <span style={{ color: "darkgrey" }}>
-                                {row.name}
-                              </span>
-                            </div>
+                            <span style={{ color: "darkgrey" }}>
+                              {row.name}
+                            </span>
+                          </div>
 
-                          </TableCell>
-                          <TableCell align="right">
-                            {symbol}{" "}
-                            {numberWithCommas(row.current_price.toFixed(2))}
-                          </TableCell>
-                          <TableCell
-                            align="right"
-                            style={{
-                              color: profit > 0 ? "rgb(14, 203, 129)" : "red",
-                              fontWeight: 500,
-                            }}
-                          >
-                            {profit && "+"}
-                            {row.price_change_percentage_24h.toFixed(2)}%
-                          </TableCell>
-                          <TableCell align="right">
-                            {symbol}{" "}
-                            {numberWithCommas(
-                              row.market_cap.toString().slice(0, -6)
-                            )}
-                            M
-                          </TableCell>
+                        </TableCell>
+                        <TableCell align="right">
+                          {symbol}{" "}
+                          {numberWithCommas(row.current_price.toFixed(2))}
+                        </TableCell>
+                        <TableCell
+                          align="right"
+                          style={{
+                            color: profit > 0 ? "rgb(14, 203, 129)" : "red",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {profit && "+"}
+                          {row.price_change_percentage_24h.toFixed(2)}%
+                        </TableCell>
+                        <TableCell align="right">
+                          {symbol}{" "}
+                          {numberWithCommas(
+                            row.market_cap.toString().slice(0, -6)
+                          )}
+                          M
+                        </TableCell>
 
 
-                        </TableRow>
-                      )
-                    })}
+                      </TableRow>
+                    )
+                  })}
                 </TableBody>
 
               </Table>
